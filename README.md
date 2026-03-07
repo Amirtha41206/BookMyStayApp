@@ -6,7 +6,7 @@ PROJECT TITLE:
 Book My Stay - Hotel Booking Management System
 
 VERSION:
-2.1
+3.1
 
 AUTHOR:
 Amirtha S S
@@ -16,58 +16,55 @@ Amirtha S S
 PROJECT DESCRIPTION
 
 The Book My Stay App is a console-based Hotel Booking
-Management System developed to demonstrate the practical
-application of Core Java and object-oriented programming
-concepts in real-world software systems.
+Management System designed to demonstrate the practical
+application of Core Java and fundamental data structures
+in solving real-world software engineering problems.
 
-The system is designed incrementally through multiple
-use cases. Each use case introduces a new concept that
-helps developers understand how scalable software systems
-are structured and implemented.
+The system is developed incrementally through multiple
+use cases. Each use case introduces a concept that
+addresses common challenges such as inventory consistency,
+state management, and system scalability.
 
-This implementation introduces the concept of domain
-modeling using abstraction and inheritance. Different
-room types are represented as objects while availability
-is stored using simple variables.
+This implementation introduces centralized room inventory
+management using a HashMap data structure, replacing
+the scattered availability variables used in the
+previous use case.
 
-This implementation covers Use Case 2:
-Basic Room Types & Static Availability.
+This implementation covers Use Case 3:
+Centralized Room Inventory Management.
 
 ============================================================
 
-USE CASE 2: BASIC ROOM TYPES & STATIC AVAILABILITY
+USE CASE 3: CENTRALIZED ROOM INVENTORY MANAGEMENT
 
-At this stage, the application models different hotel
-room types using object-oriented principles.
+At this stage, the application introduces a dedicated
+inventory management component responsible for storing
+and managing room availability in a centralized structure.
 
 The program:
 
-- Defines an abstract Room class
-- Implements concrete classes for Single, Double,
-  and Suite rooms
-- Initializes room objects in the application
-- Stores availability using simple variables
-- Displays room details and availability to the console
+- Initializes a RoomInventory component
+- Registers room types with their availability counts
+- Stores availability using a HashMap
+- Provides controlled methods to retrieve and update inventory
+- Displays the current inventory state to the console
 
 ============================================================
 
 KEY CONCEPTS USED
 
-- **Abstract Class** – Defines a generalized Room type
-- **Inheritance** – SingleRoom, DoubleRoom, and SuiteRoom
-  extend the Room class
-- **Polymorphism** – Room objects are referenced using the
-  Room type
-- **Encapsulation** – Room attributes are protected inside
-  the Room class
-- **Static Availability Representation** – Availability
-  stored using simple variables rather than data structures
+- **HashMap** – Stores room types as keys and available room counts as values
+- **O(1) Lookup** – Provides fast retrieval and updates
+- **Centralized State Management** – Single source of truth for availability
+- **Encapsulation** – Inventory operations handled by RoomInventory class
+- **Separation of Concerns** – Room inventory managed separately from room definitions
+- **Scalability** – New room types can be added without changing system logic
 
 ============================================================
 
 DATA STRUCTURE USED
 
-- Primitive variables (int) for availability storage
+- HashMap<String, Integer>
 
 ============================================================
 
@@ -83,7 +80,8 @@ PROJECT STRUCTURE
 
 BookMyStayApp/
 |
-|-- UseCase2RoomInitialization.java
+|-- UseCase3InventorySetup.java
+|-- RoomInventory.java
 |-- README.md
 
 ============================================================
@@ -99,33 +97,24 @@ cd Desktop\BookMyStayApp
 
 Step 3: Compile the program
 
-javac UseCase2RoomInitialization.java
+javac UseCase3InventorySetup.java
 
 Step 4: Run the program
 
-java UseCase2RoomInitialization
+java UseCase3InventorySetup
 
 ============================================================
 
 EXPECTED OUTPUT
 
 ======================================
-Book My Stay - Version 2.1
+Book My Stay - Version 3.1
 ======================================
 
-Single Room Details:
-Beds: 1
-Price per night: $80.0
-Available: 5
+Current Room Inventory:
 
-Double Room Details:
-Beds: 2
-Price per night: $120.0
-Available: 3
-
-Suite Room Details:
-Beds: 3
-Price per night: $250.0
-Available: 2
+Single Room : 5
+Double Room : 3
+Suite Room  : 2
 
 ============================================================
