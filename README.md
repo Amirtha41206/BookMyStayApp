@@ -83,7 +83,7 @@ BookMyStayApp/
 
 ============================================================
 
-▶ HOW TO COMPILE AND RUN THE PROGRAM
+HOW TO COMPILE AND RUN THE PROGRAM
 
 Step 1: Open Command Prompt or Terminal
 
