@@ -1,56 +1,56 @@
-# Book My Stay App
-
 ============================================================
 
 PROJECT TITLE:
 Book My Stay - Hotel Booking Management System
 
 VERSION:
-3.1
+9.0
 
 AUTHOR:
 Amirtha S S
 
 ============================================================
-At this stage, the application introduces a mechanism
-to store and manage confirmed bookings in a structured
-and ordered manner for reporting and administrative use.
+
+At this stage, the application introduces structured
+validation and error handling to ensure that invalid
+inputs and inconsistent system states are detected
+and handled early.
 
 The program:
 
-Stores each confirmed reservation in booking history
+Validates booking input before processing
 
-Maintains records in the order they are confirmed
+Checks if the room type exists in inventory
 
-Uses a List data structure to preserve chronological order
+Prevents invalid or negative room allocation
 
-Provides read-only access to stored booking data
+Uses custom exceptions for invalid booking scenarios
 
-Generates summary reports from booking history
+Displays meaningful error messages on failure
 
-Ensures reporting does not modify original data
+Ensures system continues running safely after errors
 
 ============================================================
 
 KEY CONCEPTS USED
 
-List (ArrayList) – Stores booking history in insertion order
+Input Validation – Ensures data correctness before processing
 
-Ordered Storage – Maintains chronological sequence of bookings
+Custom Exceptions – Represents domain-specific errors clearly
 
-Operational Visibility – Enables tracking of past reservations
+Fail-Fast Design – Detects errors early and stops invalid operations
 
-Historical Tracking – Creates an audit trail of bookings
+State Protection – Prevents invalid inventory updates
 
-Separation of Concerns – Data storage and reporting handled separately
+Graceful Failure Handling – Avoids system crashes with proper messages
 
-Read-Only Data Access – Prevents modification during reporting
-
-Reporting Readiness – Structured data enables easy report generation
+Defensive Programming – Handles incorrect inputs, not just ideal cases
 
 ============================================================
 
 DATA STRUCTURE USED
+
+HashMap<String, Integer>
 
 List<Reservation>
 
@@ -62,39 +62,36 @@ Processing: Alice
 Booking Confirmed for Alice
 
 Processing: Bob
-Booking Confirmed for Bob
+Error: Invalid room type
 
 Processing: Charlie
-Booking Failed for Charlie
+Error: Not enough rooms available
 
---- Booking History ---
-RES-1 | Alice | Single
-RES-2 | Bob | Double
+Processing: David
+Error: Invalid room count
 
---- Booking Summary ---
-Total Bookings: 2
-Total Rooms Booked: 3
+System continues running safely...
 
 ============================================================
 
 KEY BENEFITS
 
-Maintains complete booking audit trail
+Early detection of invalid inputs
 
-Enables reporting and administrative analysis
+Prevents system crashes and data corruption
 
-Improves system transparency
+Improves reliability and stability
 
-Supports future scalability and persistence
+Enhances debugging and maintainability
 
 ============================================================
 
-LIMITATION OF PREVIOUS USE CASE (UC7)
+LIMITATION OF PREVIOUS USE CASE (UC8)
 
-No booking history tracking
+Assumed all inputs were valid
 
-No reporting capability
+No validation for incorrect data
 
-No visibility into past bookings
+Risk of invalid system states and incorrect reports
 
-==============================================================
+============================================================
