@@ -1,50 +1,51 @@
+Book My Stay App
+
 ============================================================
 
 PROJECT TITLE:
 Book My Stay - Hotel Booking Management System
 
 VERSION:
-9.0
+4.0
 
 AUTHOR:
 Amirtha S S
 
 ============================================================
 
-At this stage, the application introduces structured
-validation and error handling to ensure that invalid
-inputs and inconsistent system states are detected
-and handled early.
+At Use Case 4, the application introduces a mechanism
+to search and display available room types dynamically
+based on current inventory data.
 
 The program:
 
-Validates booking input before processing
+Retrieves room availability from centralized inventory
 
-Checks if the room type exists in inventory
+Displays only available room types
 
-Prevents invalid or negative room allocation
+Filters rooms based on availability (> 0)
 
-Uses custom exceptions for invalid booking scenarios
+Provides dynamic search results to users
 
-Displays meaningful error messages on failure
+Ensures updated inventory is reflected in search results
 
-Ensures system continues running safely after errors
+Improves user experience by showing valid options only
 
 ============================================================
 
 KEY CONCEPTS USED
 
-Input Validation – Ensures data correctness before processing
+Search Operation – Retrieves available rooms dynamically
 
-Custom Exceptions – Represents domain-specific errors clearly
+Filtering – Displays only rooms with availability > 0
 
-Fail-Fast Design – Detects errors early and stops invalid operations
+HashMap Traversal – Iterates through inventory data
 
-State Protection – Prevents invalid inventory updates
+Dynamic Data Handling – Reflects real-time availability
 
-Graceful Failure Handling – Avoids system crashes with proper messages
+Separation of Concerns – Search logic separated from inventory
 
-Defensive Programming – Handles incorrect inputs, not just ideal cases
+User-Centric Design – Shows only valid booking options
 
 ============================================================
 
@@ -52,46 +53,27 @@ DATA STRUCTURE USED
 
 HashMap<String, Integer>
 
-List<Reservation>
-
 ============================================================
 
 EXPECTED OUTPUT
 
-Processing: Alice
-Booking Confirmed for Alice
+Available Rooms:
 
-Processing: Bob
-Error: Invalid room type
+Single Room : 2
+Double Room : 1
 
-Processing: Charlie
-Error: Not enough rooms available
-
-Processing: David
-Error: Invalid room count
-
-System continues running safely...
+Suite Room is not available
 
 ============================================================
 
 KEY BENEFITS
 
-Early detection of invalid inputs
+Displays only valid and available room options
 
-Prevents system crashes and data corruption
+Improves booking decision-making for users
 
-Improves reliability and stability
+Prevents selection of unavailable rooms
 
-Enhances debugging and maintainability
-
-============================================================
-
-LIMITATION OF PREVIOUS USE CASE (UC8)
-
-Assumed all inputs were valid
-
-No validation for incorrect data
-
-Risk of invalid system states and incorrect reports
+Reflects real-time inventory changes
 
 ============================================================
