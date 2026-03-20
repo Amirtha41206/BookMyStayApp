@@ -12,109 +12,89 @@ AUTHOR:
 Amirtha S S
 
 ============================================================
-
-PROJECT DESCRIPTION
-
-The Book My Stay App is a console-based Hotel Booking
-Management System designed to demonstrate the practical
-application of Core Java and fundamental data structures
-in solving real-world software engineering problems.
-
-The system is developed incrementally through multiple
-use cases. Each use case introduces a concept that
-addresses common challenges such as inventory consistency,
-state management, and system scalability.
-
-This implementation introduces centralized room inventory
-management using a HashMap data structure, replacing
-the scattered availability variables used in the
-previous use case.
-
-This implementation covers Use Case 3:
-Centralized Room Inventory Management.
-
-============================================================
-
-USE CASE 3: CENTRALIZED ROOM INVENTORY MANAGEMENT
-
-At this stage, the application introduces a dedicated
-inventory management component responsible for storing
-and managing room availability in a centralized structure.
+At this stage, the application introduces a mechanism
+to store and manage confirmed bookings in a structured
+and ordered manner for reporting and administrative use.
 
 The program:
 
-- Initializes a RoomInventory component
-- Registers room types with their availability counts
-- Stores availability using a HashMap
-- Provides controlled methods to retrieve and update inventory
-- Displays the current inventory state to the console
+Stores each confirmed reservation in booking history
+
+Maintains records in the order they are confirmed
+
+Uses a List data structure to preserve chronological order
+
+Provides read-only access to stored booking data
+
+Generates summary reports from booking history
+
+Ensures reporting does not modify original data
 
 ============================================================
 
 KEY CONCEPTS USED
 
-- **HashMap** – Stores room types as keys and available room counts as values
-- **O(1) Lookup** – Provides fast retrieval and updates
-- **Centralized State Management** – Single source of truth for availability
-- **Encapsulation** – Inventory operations handled by RoomInventory class
-- **Separation of Concerns** – Room inventory managed separately from room definitions
-- **Scalability** – New room types can be added without changing system logic
+List (ArrayList) – Stores booking history in insertion order
+
+Ordered Storage – Maintains chronological sequence of bookings
+
+Operational Visibility – Enables tracking of past reservations
+
+Historical Tracking – Creates an audit trail of bookings
+
+Separation of Concerns – Data storage and reporting handled separately
+
+Read-Only Data Access – Prevents modification during reporting
+
+Reporting Readiness – Structured data enables easy report generation
 
 ============================================================
 
 DATA STRUCTURE USED
 
-- HashMap<String, Integer>
-
-============================================================
-
-TECHNOLOGIES USED
-
-- Java
-- IntelliJ IDEA
-- Command Line Interface (CLI)
-
-============================================================
-
-PROJECT STRUCTURE
-
-BookMyStayApp/
-|
-|-- UseCase3InventorySetup.java
-|-- RoomInventory.java
-|-- README.md
-
-============================================================
-
-▶ HOW TO COMPILE AND RUN THE PROGRAM
-
-Step 1: Open Command Prompt or Terminal
-
-Step 2: Navigate to the project folder
-
-Example:
-cd Desktop\BookMyStayApp
-
-Step 3: Compile the program
-
-javac UseCase3InventorySetup.java
-
-Step 4: Run the program
-
-java UseCase3InventorySetup
+List<Reservation>
 
 ============================================================
 
 EXPECTED OUTPUT
 
-======================================
-Book My Stay - Version 3.1
-======================================
+Processing: Alice
+Booking Confirmed for Alice
 
-Current Room Inventory:
+Processing: Bob
+Booking Confirmed for Bob
 
-Single Room : 5
-Double Room : 3
-Suite Room  : 2
+Processing: Charlie
+Booking Failed for Charlie
+
+--- Booking History ---
+RES-1 | Alice | Single
+RES-2 | Bob | Double
+
+--- Booking Summary ---
+Total Bookings: 2
+Total Rooms Booked: 3
 
 ============================================================
+
+KEY BENEFITS
+
+Maintains complete booking audit trail
+
+Enables reporting and administrative analysis
+
+Improves system transparency
+
+Supports future scalability and persistence
+
+============================================================
+
+LIMITATION OF PREVIOUS USE CASE (UC7)
+
+No booking history tracking
+
+No reporting capability
+
+No visibility into past bookings
+
+==============================================================
