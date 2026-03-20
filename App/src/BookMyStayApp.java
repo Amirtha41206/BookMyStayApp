@@ -1,115 +1,122 @@
 import java.util.*;
 
-// Room Domain Model
-class Room {
-    private String type;
-    private double price;
-    private List<String> amenities;
+// Add-On Service
+class AddOnService {
+    private String name;
+    private double cost;
 
-    public Room(String type, double price, List<String> amenities) {
-        this.type = type;
-        this.price = price;
-        this.amenities = amenities;
+    public AddOnService(String name, double cost) {
+        this.name = name;
+        this.cost = cost;
     }
 
-    public String getType() {
-        return type;
+    public String getName() {
+        return name;
     }
 
-    public double getPrice() {
-        return price;
+    public double getCost() {
+        return cost;
     }
 
-    public List<String> getAmenities() {
-        return amenities;
-    }
-
-    public void displayDetails() {
-        System.out.println("Room Type: " + type);
-        System.out.println("Price: ₹" + price);
-        System.out.println("Amenities: " + amenities);
-        System.out.println("--------------------------");
+    public void display() {
+        System.out.println("Service: " + name + " | Cost: ₹" + cost);
     }
 }
 
-// Inventory (State Holder)
-class Inventory {
-    private Map<String, Integer> roomAvailability = new HashMap<>();
+// Reservation (from previous use cases)
+class Reservation {
+    private String reservationId;
+    private String guestName;
 
-    public void addRoom(String type, int count) {
-        roomAvailability.put(type, count);
+    public Reservation(String reservationId, String guestName) {
+        this.reservationId = reservationId;
+        this.guestName = guestName;
     }
 
-    // Read-only access
-    public int getAvailability(String type) {
-        return roomAvailability.getOrDefault(type, 0);
+    public String getReservationId() {
+        return reservationId;
     }
 
-    public Map<String, Integer> getAllAvailability() {
-        return Collections.unmodifiableMap(roomAvailability); // defensive
+    public String getGuestName() {
+        return guestName;
     }
 }
 
-// Search Service (Read-only)
-class SearchService {
-    private Inventory inventory;
-    private Map<String, Room> roomMap;
+// Add-On Service Manager
+class AddOnServiceManager {
 
-    public SearchService(Inventory inventory, Map<String, Room> roomMap) {
-        this.inventory = inventory;
-        this.roomMap = roomMap;
+    // Map<ReservationID, List of Services>
+    private Map<String, List<AddOnService>> serviceMap = new HashMap<>();
+
+    // Add service to a reservation
+    public void addService(String reservationId, AddOnService service) {
+
+        List<AddOnService> services =
+                serviceMap.getOrDefault(reservationId, new ArrayList<>());
+
+        services.add(service);
+        serviceMap.put(reservationId, services);
+
+        System.out.println("Added service '" + service.getName() +
+                "' to reservation " + reservationId);
     }
 
-    public void searchAvailableRooms() {
-        System.out.println("\nAvailable Rooms:\n");
+    // Display services
+    public void displayServices(String reservationId) {
+        List<AddOnService> services = serviceMap.get(reservationId);
 
-        for (String type : inventory.getAllAvailability().keySet()) {
-
-            int available = inventory.getAvailability(type);
-
-            // Validation logic: only show available rooms
-            if (available > 0) {
-                Room room = roomMap.get(type);
-
-                if (room != null) { // defensive check
-                    room.displayDetails();
-                    System.out.println("Available Count: " + available);
-                    System.out.println("==========================");
-                }
-            }
+        if (services == null || services.isEmpty()) {
+            System.out.println("No add-on services for reservation " + reservationId);
+            return;
         }
+
+        System.out.println("\nServices for Reservation " + reservationId + ":");
+
+        for (AddOnService s : services) {
+            s.display();
+        }
+    }
+
+    // Calculate total cost
+    public double calculateTotalCost(String reservationId) {
+        List<AddOnService> services = serviceMap.get(reservationId);
+
+        if (services == null) return 0;
+
+        double total = 0;
+        for (AddOnService s : services) {
+            total += s.getCost();
+        }
+        return total;
     }
 }
 
 // Main Class
 public class BookMyStayApp {
+
     public static void main(String[] args) {
 
-        // Step 1: Create inventory
-        Inventory inventory = new Inventory();
-        inventory.addRoom("Single", 3);
-        inventory.addRoom("Double", 0); // unavailable
-        inventory.addRoom("Suite", 2);
+        // Step 1: Create reservation (already confirmed in UC6)
+        Reservation reservation = new Reservation("RES-101", "Alice");
 
-        // Step 2: Create room details
-        Map<String, Room> roomMap = new HashMap<>();
+        // Step 2: Create services
+        AddOnService breakfast = new AddOnService("Breakfast", 500);
+        AddOnService wifi = new AddOnService("Premium WiFi", 200);
+        AddOnService spa = new AddOnService("Spa Access", 1500);
 
-        roomMap.put("Single", new Room(
-                "Single", 2000,
-                Arrays.asList("WiFi", "TV", "AC")));
+        // Step 3: Manager
+        AddOnServiceManager manager = new AddOnServiceManager();
 
-        roomMap.put("Double", new Room(
-                "Double", 3500,
-                Arrays.asList("WiFi", "TV", "AC", "Mini Bar")));
+        // Step 4: Add services
+        manager.addService(reservation.getReservationId(), breakfast);
+        manager.addService(reservation.getReservationId(), wifi);
+        manager.addService(reservation.getReservationId(), spa);
 
-        roomMap.put("Suite", new Room(
-                "Suite", 6000,
-                Arrays.asList("WiFi", "TV", "AC", "Jacuzzi", "Balcony")));
+        // Step 5: Display services
+        manager.displayServices(reservation.getReservationId());
 
-        // Step 3: Search Service
-        SearchService searchService = new SearchService(inventory, roomMap);
-
-        // Step 4: Perform search (Read-only)
-        searchService.searchAvailableRooms();
+        // Step 6: Total cost
+        double total = manager.calculateTotalCost(reservation.getReservationId());
+        System.out.println("\nTotal Add-On Cost: ₹" + total);
     }
 }
