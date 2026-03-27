@@ -1,91 +1,98 @@
+import java.io.*;
 import java.util.*;
 
-// Shared Inventory Class
-class RoomInventory {
-    private Map<String, Integer> inventory = new HashMap<>();
+// Booking class (Serializable)
+class Booking implements Serializable {
+    String bookingId;
+    String roomType;
+
+    Booking(String bookingId, String roomType) {
+        this.bookingId = bookingId;
+        this.roomType = roomType;
+    }
+}
+
+// Room Inventory (Serializable)
+class RoomInventory implements Serializable {
+    Map<String, Integer> inventory = new HashMap<>();
 
     public RoomInventory() {
         inventory.put("Single", 2);
         inventory.put("Double", 1);
     }
-
-    // Synchronized method (critical section)
-    public synchronized boolean bookRoom(String roomType, String threadName) {
-        int available = inventory.getOrDefault(roomType, 0);
-
-        if (available > 0) {
-            System.out.println(threadName + " booking " + roomType + " Room...");
-
-            // simulate delay (to expose race condition if not synchronized)
-            try { Thread.sleep(100); } catch (InterruptedException e) {}
-
-            inventory.put(roomType, available - 1);
-            System.out.println("Booking successful: " + roomType + " Room");
-            return true;
-        } else {
-            System.out.println("Booking failed: No " + roomType + " rooms available");
-            return false;
-        }
-    }
-
-    public void displayInventory() {
-        System.out.println("\nFinal Inventory:");
-        for (String key : inventory.keySet()) {
-            System.out.println(key + " Room : " + inventory.get(key));
-        }
-    }
 }
 
-// Booking Task (Thread)
-class BookingTask implements Runnable {
-    private RoomInventory inventory;
-    private String roomType;
+// Persistence Service
+class PersistenceService {
 
-    public BookingTask(RoomInventory inventory, String roomType) {
-        this.inventory = inventory;
-        this.roomType = roomType;
+    private static final String FILE_NAME = "hotel_data.ser";
+
+    // Save data to file
+    public static void saveData(RoomInventory inventory, Map<String, Booking> bookings) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
+            oos.writeObject(inventory);
+            oos.writeObject(bookings);
+            System.out.println("Data saved successfully");
+        } catch (IOException e) {
+            System.out.println("Error saving data");
+        }
     }
 
-    @Override
-    public void run() {
-        inventory.bookRoom(roomType, Thread.currentThread().getName());
+    // Load data from file
+    public static Object[] loadData() {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_NAME))) {
+            RoomInventory inventory = (RoomInventory) ois.readObject();
+            Map<String, Booking> bookings = (Map<String, Booking>) ois.readObject();
+            System.out.println("Data restored successfully");
+            return new Object[]{inventory, bookings};
+        } catch (Exception e) {
+            System.out.println("No previous data found. Starting fresh...");
+            return null;
+        }
     }
 }
 
 // Main Class
 public class BookMyStayApp {
+
     public static void main(String[] args) {
 
         System.out.println("======================================");
-        System.out.println("Book My Stay - Version 2.13.11\n");
+        System.out.println("Book My Stay - Version 2.13.12\n");
 
-        RoomInventory inventory = new RoomInventory();
+        RoomInventory inventory;
+        Map<String, Booking> bookings;
 
-        System.out.println("Simulating concurrent bookings...\n");
+        // Load previous state
+        Object[] data = PersistenceService.loadData();
 
-        // Create multiple threads (simulating users)
-        Thread t1 = new Thread(new BookingTask(inventory, "Single"), "Thread-1");
-        Thread t2 = new Thread(new BookingTask(inventory, "Single"), "Thread-2");
-        Thread t3 = new Thread(new BookingTask(inventory, "Double"), "Thread-3");
-        Thread t4 = new Thread(new BookingTask(inventory, "Single"), "Thread-4");
+        if (data != null) {
+            inventory = (RoomInventory) data[0];
+            bookings = (Map<String, Booking>) data[1];
+        } else {
+            inventory = new RoomInventory();
+            bookings = new HashMap<>();
+        }
 
-        // Start threads
-        t1.start();
-        t2.start();
-        t3.start();
-        t4.start();
+        // Simulate booking
+        bookings.put("B101", new Booking("B101", "Single"));
+        bookings.put("B102", new Booking("B102", "Double"));
 
-        // Wait for all threads to finish
-        try {
-            t1.join();
-            t2.join();
-            t3.join();
-            t4.join();
-        } catch (InterruptedException e) {}
+        System.out.println("\nSaving system state...");
+        PersistenceService.saveData(inventory, bookings);
 
-        // Display final inventory
-        inventory.displayInventory();
+        // Display recovered data
+        System.out.println("\nRecovered Inventory:");
+        for (String key : inventory.inventory.keySet()) {
+            System.out.println(key + " Room : " + inventory.inventory.get(key));
+        }
 
-        System.out.println("\nSystem state remains consistent (no double booking).");
+        System.out.println("\nRecovered Bookings:");
+        for (String key : bookings.keySet()) {
+            Booking b = bookings.get(key);
+            System.out.println(b.bookingId + " -> " + b.roomType + " Room");
+        }
+
+        System.out.println("\nSystem resumed with previous state");
     }
 }
